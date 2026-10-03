@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>luma — 생물 사진 AI 보정 가이드</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <nav>
+        <a class="brand" href="#"><span class="brand-mark">◒</span>luma</a>
+        <div class="nav-links"><a href="#how">이용 방법</a><a href="#guide">사진 가이드</a></div>
+        <button class="login">로그인 <span>↗</span></button>
+      </nav>
+
+      <section class="hero" id="how">
+        <div class="eyebrow"><span></span> BIO PHOTO REVIEW</div>
+        <h1>생물의 <em>특징</em>이<br />잘 보이도록 안내해요.</h1>
+        <p>생물군과 사진을 선택하면 AI가 동정에 중요한 특징을 살피고,<br class="desktop" /> 기록에 더 적합한 보정과 촬영 방향을 제안합니다.</p>
+      </section>
+
+      <section class="workspace" id="guide">
+        <div class="upload-card" id="dropZone" role="button" tabindex="0" aria-label="생물 사진 업로드">
+          <input id="fileInput" type="file" accept="image/*" hidden />
+          <div class="image-preview" id="imagePreview" aria-hidden="true">
+            <div class="specimen-art"><span class="stem"></span><span class="leaf leaf-one"></span><span class="leaf leaf-two"></span><span class="flower"></span></div>
+          </div>
+          <div class="upload-copy">
+            <div class="plus">+</div>
+            <strong>생물 사진을 올려보세요</strong>
+            <span>또는 <button id="browseButton" type="button">파일에서 선택하기</button></span>
+            <small>JPG, PNG, WEBP · 최대 20MB</small>
+          </div>
+        </div>
+
+        <aside class="guide-card" id="guideCard">
+          <div class="guide-head"><div><span class="status-dot"></span>기록 가이드</div><span class="analysis-state">사진을 기다리는 중</span></div>
+          <div class="taxon-select-wrap">
+            <label for="taxonSelect">어떤 생물군인가요?</label>
+            <select id="taxonSelect" name="taxon">
+              <option value="" selected disabled>생물군을 선택해 주세요</option>
+              <option>관속식물</option><option>선태류</option><option>포유류</option><option>조류</option><option>파충류</option><option>양서류</option><option>어류</option><option>곤충</option><option>거미류</option><option>갑각류</option><option>연체동물</option><option>기타동물</option><option>균류/지의류</option><option>조류(algae)</option><option>기타</option>
+            </select>
+          </div>
+          <div class="empty-guide" id="emptyGuide"><div class="sparkle">✦</div><p>생물군과 사진을 선택하면<br />특징을 살리는 가이드를 드려요.</p></div>
+          <div class="result-guide" id="resultGuide" hidden>
+            <p class="group-pill" id="selectedGroup">선택한 생물군</p>
+            <p class="summary"><b>형태와 색의 정보가 잘 보이는 사진</b>이에요.<br />아래 조정으로 관찰 기록의 선명도를 높여보세요.</p>
+            <div class="meters">
+              <div><span>밝기</span><div class="meter"><i style="width:64%"></i></div><b>+0.2</b></div>
+              <div><span>선명도</span><div class="meter warm"><i style="width:68%"></i></div><b>+12</b></div>
+              <div><span>그림자</span><div class="meter"><i style="width:52%"></i></div><b>+9</b></div>
+            </div>
+            <div class="tips"><span>기록을 위한 제안</span><p id="groupTip">01&nbsp; 형태가 드러나는 부분은 그림자를 조금 밝게 해보세요.</p><p>02&nbsp; 전체 모습과 특징 부위를 함께 남기면 동정에 도움이 돼요.</p></div>
+          </div>
+        </aside>
+      </section>
+
+      <section class="features">
+        <article><span>01</span><h2>생물군을 고르세요</h2><p>대상 생물군에 맞춰 날개맥, 잎맥, 비늘 등 중요한 관찰 지점을 달리 안내합니다.</p></article>
+        <article><span>02</span><h2>특징을 선명하게</h2><p>색의 왜곡과 그림자를 점검해 형태적 특징이 잘 남는 보정값을 제안합니다.</p></article>
+        <article><span>03</span><h2>기록을 완성하세요</h2><p>동정에 필요한 추가 촬영 각도와 사진 속에서 확인할 포인트를 함께 알려드려요.</p></article>
+      </section>
+
+      <footer><span>© 2026 LUMA STUDIO</span><span>한 장의 사진을 더 좋은 생물 기록으로</span></footer>
+    </main>
+    <script src="script.js"></script>
+  </body>
+</html>
