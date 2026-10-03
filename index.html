@@ -39,7 +39,7 @@
         </div>
 
         <aside class="guide-card" id="guideCard">
-          <div class="guide-head"><div><span class="status-dot"></span>기록 가이드</div><span class="analysis-state">사진을 기다리는 중</span></div>
+          <div class="guide-head"><div><span class="status-dot"></span>Lightroom 보정 가이드</div><span class="analysis-state">사진을 기다리는 중</span></div>
           <div class="taxon-select-wrap">
             <label for="taxonSelect">어떤 생물군인가요?</label>
             <select id="taxonSelect" name="taxon">
@@ -48,14 +48,17 @@
             </select>
             <button class="analyze-button" id="analyzeButton" type="button" disabled>사진 분석하기 <span>→</span></button>
           </div>
-          <div class="empty-guide" id="emptyGuide"><div class="sparkle">✦</div><p>생물군과 사진을 선택하면<br />특징을 살리는 가이드를 드려요.</p></div>
+          <div class="empty-guide" id="emptyGuide"><div class="sparkle">✦</div><p>생물군과 사진을 선택하면<br />Lightroom 보정값을 계산해 드려요.</p></div>
           <div class="result-guide" id="resultGuide" hidden>
             <p class="group-pill" id="selectedGroup">선택한 생물군</p>
             <p class="summary" id="analysisSummary"></p>
             <div class="meters">
-              <div><span>밝기</span><div class="meter"><i id="brightnessMeter"></i></div><b id="brightnessValue"></b></div>
+              <div><span>노출</span><div class="meter"><i id="brightnessMeter"></i></div><b id="brightnessValue"></b></div>
               <div><span>대비</span><div class="meter warm"><i id="contrastMeter"></i></div><b id="contrastValue"></b></div>
+              <div><span>하이라이트</span><div class="meter"><i id="highlightMeter"></i></div><b id="highlightValue"></b></div>
               <div><span>그림자</span><div class="meter"><i id="shadowMeter"></i></div><b id="shadowValue"></b></div>
+              <div><span>텍스처</span><div class="meter warm"><i id="textureMeter"></i></div><b id="textureValue"></b></div>
+              <div><span>생동감</span><div class="meter"><i id="vibranceMeter"></i></div><b id="vibranceValue"></b></div>
             </div>
             <div class="tips"><span>기록을 위한 제안</span><p id="groupTip">01&nbsp; 형태가 드러나는 부분은 그림자를 조금 밝게 해보세요.</p><p>02&nbsp; 전체 모습과 특징 부위를 함께 남기면 동정에 도움이 돼요.</p></div>
           </div>

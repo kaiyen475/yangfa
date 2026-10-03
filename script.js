@@ -53,16 +53,19 @@ function imageMetrics(image) {
   const context = canvas.getContext('2d', { willReadFrequently: true });
   context.drawImage(image, 0, 0, canvas.width, canvas.height);
   const data = context.getImageData(0, 0, canvas.width, canvas.height).data;
-  let sum = 0; let sumSquares = 0; let shadows = 0; let count = 0;
+  let sum = 0; let sumSquares = 0; let shadows = 0; let highlights = 0; let saturationSum = 0; let count = 0;
   for (let index = 0; index < data.length; index += 16) {
-    const luminance = (data[index] * 0.2126 + data[index + 1] * 0.7152 + data[index + 2] * 0.0722) / 255;
-    sum += luminance; sumSquares += luminance ** 2; shadows += luminance < 0.22 ? 1 : 0; count += 1;
+    const red = data[index]; const green = data[index + 1]; const blue = data[index + 2];
+    const luminance = (red * 0.2126 + green * 0.7152 + blue * 0.0722) / 255;
+    const maximum = Math.max(red, green, blue); const minimum = Math.min(red, green, blue);
+    sum += luminance; sumSquares += luminance ** 2; shadows += luminance < 0.22 ? 1 : 0;
+    highlights += luminance > 0.85 ? 1 : 0; saturationSum += maximum ? (maximum - minimum) / maximum : 0; count += 1;
   }
   const brightness = sum / count;
-  return { brightness, contrast: Math.sqrt(sumSquares / count - brightness ** 2), shadows: shadows / count };
+  return { brightness, contrast: Math.sqrt(sumSquares / count - brightness ** 2), shadows: shadows / count, highlights: highlights / count, saturation: saturationSum / count };
 }
 
-function formatAdjustment(value, divisor, suffix = '') { return `${value >= 0 ? '+' : ''}${(value / divisor).toFixed(value % divisor ? 1 : 0)}${suffix}`; }
+function formatAdjustment(value, decimals = 0) { return `${value >= 0 ? '+' : ''}${value.toFixed(decimals)}`; }
 function setMeter(id, value) { document.getElementById(id).style.width = `${Math.round(Math.max(8, Math.min(100, value * 100)))}%`; }
 
 function analyzePhoto() {
@@ -71,20 +74,28 @@ function analyzePhoto() {
   analyzeButton.disabled = true;
   window.setTimeout(() => {
     const metrics = imageMetrics(loadedImage);
-    const brightnessAdjustment = (0.53 - metrics.brightness) * 1.2;
-    const contrastAdjustment = (0.2 - metrics.contrast) * 70;
-    const shadowAdjustment = (0.16 - metrics.shadows) * 50;
+    const exposureAdjustment = (0.53 - metrics.brightness) * 2.1;
+    const contrastAdjustment = (0.2 - metrics.contrast) * 115;
+    const highlightAdjustment = -metrics.highlights * 90;
+    const shadowAdjustment = (0.18 - metrics.shadows) * 80;
+    const textureAdjustment = Math.max(5, Math.min(35, (0.23 - metrics.contrast) * 120));
+    const vibranceAdjustment = Math.max(-15, Math.min(25, (0.42 - metrics.saturation) * 75));
     selectedGroup.textContent = taxonSelect.value;
     groupTip.textContent = `01  ${groupTips[taxonSelect.value]}`;
     analysisSummary.innerHTML = metrics.brightness < 0.38
-      ? '<b>조금 어두운 사진이에요.</b><br />밝기와 그림자를 올려 관찰 특징을 더 드러내 보세요.'
+      ? '<b>조금 어두운 사진이에요.</b><br />Lightroom의 노출과 그림자를 올려 관찰 특징을 더 드러내 보세요.'
       : metrics.brightness > 0.72
-        ? '<b>밝은 영역이 많은 사진이에요.</b><br />하이라이트를 낮추면 표면의 색과 결을 지킬 수 있어요.'
-        : '<b>밝기의 균형이 좋은 사진이에요.</b><br />대비와 그림자를 조절해 관찰 기록을 더 선명하게 남겨보세요.';
-    setMeter('brightnessMeter', metrics.brightness); setMeter('contrastMeter', metrics.contrast * 2.5); setMeter('shadowMeter', metrics.shadows * 3.5);
-    document.getElementById('brightnessValue').textContent = formatAdjustment(brightnessAdjustment, 1);
-    document.getElementById('contrastValue').textContent = formatAdjustment(contrastAdjustment, 1);
-    document.getElementById('shadowValue').textContent = formatAdjustment(shadowAdjustment, 1);
+        ? '<b>밝은 영역이 많은 사진이에요.</b><br />Lightroom의 하이라이트를 낮추면 표면의 색과 결을 지킬 수 있어요.'
+        : '<b>밝기의 균형이 좋은 사진이에요.</b><br />Lightroom의 대비와 텍스처를 조절해 관찰 기록을 더 선명하게 남겨보세요.';
+    setMeter('brightnessMeter', (exposureAdjustment + 2) / 4); setMeter('contrastMeter', (contrastAdjustment + 100) / 200);
+    setMeter('highlightMeter', (highlightAdjustment + 100) / 200); setMeter('shadowMeter', (shadowAdjustment + 100) / 200);
+    setMeter('textureMeter', (textureAdjustment + 100) / 200); setMeter('vibranceMeter', (vibranceAdjustment + 100) / 200);
+    document.getElementById('brightnessValue').textContent = formatAdjustment(exposureAdjustment, 1);
+    document.getElementById('contrastValue').textContent = formatAdjustment(contrastAdjustment);
+    document.getElementById('highlightValue').textContent = formatAdjustment(highlightAdjustment);
+    document.getElementById('shadowValue').textContent = formatAdjustment(shadowAdjustment);
+    document.getElementById('textureValue').textContent = formatAdjustment(textureAdjustment);
+    document.getElementById('vibranceValue').textContent = formatAdjustment(vibranceAdjustment);
     emptyGuide.hidden = true; resultGuide.hidden = false;
     analysisState.textContent = '분석 완료'; updateButton();
   }, 350);
